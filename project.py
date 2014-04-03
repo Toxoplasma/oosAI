@@ -1,7 +1,8 @@
 #Test reading in memory
+import sleep
 
-BIN_XPOS = 12
-BIN_YPOS = 10
+BIN_XPOS = 4109
+BIN_YPOS = 4107
 
 def readGameStateFromFile:
 	xPos = 0
@@ -31,4 +32,7 @@ def readGameStateFromFile:
 	return xPos, yPos
 
 
+while True:
+	time.sleep(1)
 
+	print readGameStateFromFile()
