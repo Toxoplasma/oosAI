@@ -38,6 +38,15 @@ class GameState():
         ret = "Link: " , self.linkPos , "orient:", self.linkOrient ", dead: ", self.linkDead, "\nboss: " , self.bossPos, "dead: ", self.bossDead
         return ret
 
+class QAgent():
+    def __init__(self, numFeatures):
+        self.weights = [0 for i in range(numFeatures)]
+        self.actions = ["left", "up", "right", "down", "a", "b"]
+
+    def getAction(self, features):
+        
+
+
 def readGameStateFromFile():
     xPos = 0
     yPos = 0
