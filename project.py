@@ -10,7 +10,7 @@ BIN_XPOS = 4109
 BIN_YPOS = 4107
 BIN_ORIENT = 4146
 
-BIN_LINK_DEAD = 4132
+BIN_LINK_DEAD = 4128
 
 BIN_BOSS_YPOS = 4299
 BIN_BOSS_XPOS = 4301
@@ -21,7 +21,7 @@ class GameState():
     def __init__(self, (xPos, yPos, orient, bossXPos, bossYPos, linkDead)):
         self.linkPos = (xPos, yPos)
         self.linkOrient = orient
-        self.bossPos(bossXPos, bossYPos)
+        self.bossPos = (bossXPos, bossYPos)
 
         if self.bossPos == (0,0):
             self.bossDead = True
@@ -35,8 +35,12 @@ class GameState():
 
     def __repr__(self):
         (lx, ly) = self.linkPos
-        ret = "Link: " , self.linkPos , "orient:", self.linkOrient ", dead: ", self.linkDead, "\nboss: " , self.bossPos, "dead: ", self.bossDead
+        ret = "Link: " + str(self.linkPos) + " orient: " + str(self.linkOrient) + ", dead: " + \
+            str(self.linkDead) + "\nBoss: " + str(self.bossPos) + " dead: " + str(self.bossDead)
         return ret
+    
+    def __str__(self):
+        return self.__repr__()
 
 def readGameStateFromFile():
     xPos = 0
@@ -76,14 +80,13 @@ def readGameStateFromFile():
     finally:
         f.close()
 
-    return xPos, yPos, orient, bossXPos, bossYPos
+    return xPos, yPos, orient, bossXPos, bossYPos, linkDead
 
 
 while True:
     time.sleep(STEPSIZE)
-#    win32api.keybd_event(0x41, 44)
-#    time.sleep(1)
-#    win32api.keybd_event(0x25, 44, 2)
-    state = GameState(readGameStateFromFile)
-    print(state)
+    win32api.keybd_event(0xBE, 46)
+    win32api.keybd_event(0xBE, 46, 2)
+    state = GameState(readGameStateFromFile())
+    print state
 
