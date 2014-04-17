@@ -85,4 +85,5 @@ while True:
 #    time.sleep(1)
 #    win32api.keybd_event(0x25, 44, 2)
     state = GameState(readGameStateFromFile)
+    print(state)
 
