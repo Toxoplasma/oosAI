@@ -1,11 +1,11 @@
-#Test reading in memory
+#Imports
 import time
+import random
 import win32api
 import win32com.client as comclt
-wsh= comclt.Dispatch("WScript.Shell")
-# switch to emulator window
-wsh.AppActivate("VisualBoyAdvance")
 
+
+#Constants
 BIN_XPOS = 4109
 BIN_YPOS = 4107
 BIN_ORIENT = 4146
@@ -17,39 +17,17 @@ BIN_BOSS_XPOS = 4301
 
 STEPSIZE = 0.5
 
-class GameState():
-    def __init__(self, (xPos, yPos, orient, bossXPos, bossYPos, linkDead)):
-        self.linkPos = (xPos, yPos)
-        self.linkOrient = orient
-        self.bossPos = (bossXPos, bossYPos)
+ACTION_TO_VKEY = dict(left = 0x25, right = 0x27, up = 0x26, down = 0x28,
+                        a = 0x5A, b = 0x58, getstate = 0xBE) #a is z, b is x
+ACTION_TO_SKEY = dict(left = 75, right = 77, up = 72, down = 80,
+                        a = 44, b = 45, getstate = 46)
 
-        if self.bossPos == (0,0):
-            self.bossDead = True
-        else:
-            self.bossDead = False
 
-        if linkDead == 0x80:
-            self.linkDead = True
-        else:
-            self.linkDead = False
-
-    def __repr__(self):
-        (lx, ly) = self.linkPos
-        ret = "Link: " + str(self.linkPos) + " orient: " + str(self.linkOrient) + ", dead: " + \
-            str(self.linkDead) + "\nBoss: " + str(self.bossPos) + " dead: " + str(self.bossDead)
-        return ret
-    
-    def __str__(self):
-        return self.__repr__()
-
-class QAgent():
-    def __init__(self, numFeatures):
-        self.weights = [0 for i in range(numFeatures)]
-        self.actions = ["left", "up", "right", "down", "a", "b"]
-
-    def getAction(self, features):
-        
-
+#Utility functions
+def dumpState():
+    #Press period then release it
+    win32api.keybd_event(ACTION_TO_VKEY['getstate'], ACTION_TO_SKEY['getstate'])
+    win32api.keybd_event(ACTION_TO_VKEY['getstate'], ACTION_TO_SKEY['getstate'], 2)
 
 def readGameStateFromFile():
     xPos = 0
@@ -91,11 +69,190 @@ def readGameStateFromFile():
 
     return xPos, yPos, orient, bossXPos, bossYPos, linkDead
 
+def argMax(argValues):
+    def pairMax((ak, av), (bk, bv)):
+        if av > bv:
+            return (ak, av)
+        return (bk, bv)
+    (bestKey, bestValue) = reduce(pairMax, argValues)
+    return bestKey
 
+
+#GAMESTATE CLASS
+class GameState():
+    def __init__(self, (xPos, yPos, orient, bossXPos, bossYPos, linkDead)):
+        self.linkPos = (xPos, yPos)
+        self.linkOrient = orient
+        self.bossPos = (bossXPos, bossYPos)
+
+        if self.bossPos == (0,0):
+            self.bossDead = True
+        else:
+            self.bossDead = False
+
+        if linkDead == 0x80:
+            self.linkDead = True
+        else:
+            self.linkDead = False
+
+    def getFeatures(self):
+            #f1: difference between x pos of link and boss
+            f1 = self.linkPos[0] - self.bossPos[0]
+
+            #f2: difference between y pos of link and boss
+            f2 = self.linkPos[1] - self.bossPos[1]
+
+            #f3-7: link orientation
+            #Up
+            f3 = (self.linkOrient == 84)
+            #Left
+            f4 = (self.linkOrient == 87)
+            #Down
+            f5 = (self.linkOrient == 86)
+            #Right
+            f6 = (self.linkOrient == 85)
+
+            featureDict = dict(xDif = f1, yDif = f2,
+                               up = f3, left = f4, down = f5, right = f6)
+
+            return featureDict
+
+    def __repr__(self):
+        (lx, ly) = self.linkPos
+        ret = "Link: " + str(self.linkPos) + " orient: " + str(self.linkOrient) + ", dead: " + \
+            str(self.linkDead) + "\nBoss: " + str(self.bossPos) + " dead: " + str(self.bossDead)
+        return ret
+    
+    def __str__(self):
+        return self.__repr__()
+
+
+
+#feature-based Q-learning class
+class QAgent():
+    def __init__(self, numFeatures):
+        self.weights = dict(xDif = 0, yDif = 0,
+                            up = 0, left = 0, down = 0, right = 0)
+        self.actions = ["left", "up", "right", "down", "a", "b"]
+
+        self.epsilon = 0.1
+        self.discount = 0.8 #gamma
+        self.alpha = 0.2 #learning rate
+
+
+    def getQValue(self, state, action):
+        features = stateToFeatures(state)
+        featureNames = sorted(features.keys())
+
+        total = 0
+        for featureName in featureNames:
+            total += features[featureName] * self.weights[featureName]
+
+        return total
+
+    def computeValueFromQValues(self, state):
+        actions = self.actions
+
+        if actions == []:
+            print "WE DUN KICKED THE BOOKET"
+            return 0.0
+
+        bestScore = float("-inf")
+        for action in actions:
+            Qvalue = self.getQValue(state, action)
+            if Qvalue >= bestScore:
+                bestScore = Qvalue
+
+        return bestScore
+
+    def computeActionFromQValues(self, state):
+        """
+          Compute the best action to take in a state.  Note that if there
+          are no legal actions, which is the case at the terminal state,
+          you should return None.
+        """
+        "*** YOUR CODE HERE ***"
+        actions = self.actions
+
+        bestAction = None
+        bestScore = float("-inf")
+        for action in actions:
+          Qvalue = self.getQValue(state, action)
+          if Qvalue > bestScore:
+            bestScore = Qvalue
+            bestAction = action
+
+        return bestAction
+
+    def getAction(self, state):
+        features = state.getFeatures()
+        legalActions = self.actions
+
+        action = None
+        "*** YOUR CODE HERE ***"
+        if random.uniform(0, 1) <= (self.epsilon):
+          action = random.choice(legalActions)
+        else:
+          action = self.computeActionFromQValues(state)
+        
+
+        return action
+
+    def update(self, state, action, nextState, reward):
+        """
+           Should update your weights based on transition
+        """
+        "*** YOUR CODE HERE ***"
+        features = state.getFeatures() #self.featExtractor.getFeatures(state, action)
+        featureNames = featureNames = sorted(features.keys())
+
+        newWeights = self.weights.copy()
+
+        bestAction = self.computeActionFromQValues(nextState)
+        #print "best action: ", bestAction
+        maxActionQValue = 0.0
+        if bestAction != None:
+          maxActionQValue = self.getQValue(nextState, bestAction)
+
+        for featureName in featureNames:
+          difference = reward + self.discount * maxActionQValue - self.getQValue(state, action)
+          newWeights[featureName] = self.weights[featureName] + self.alpha * difference * features[featureName]
+
+        self.weights = newWeights
+
+
+
+
+
+#Stuff we do at start
+#Create a windows object and use it to switch to VBA
+wsh= comclt.Dispatch("WScript.Shell")
+wsh.AppActivate("VisualBoyAdvance")
+
+#Make our learner
+state = GameState(readGameStateFromFile())
+agent = QAgent(len(state.getFeatures()))
+
+
+#Main game loop
 while True:
-    time.sleep(STEPSIZE)
-    win32api.keybd_event(0xBE, 46)
-    win32api.keybd_event(0xBE, 46, 2)
+    dumpState()
     state = GameState(readGameStateFromFile())
-    print state
+    print "State is: " + str(state)
+
+    action = agent.getAction(state)
+    print "Action is: " + action
+
+    #Do the action for one STEP
+    win32api.keybd_event(ACTION_TO_VKEY[action], ACTION_TO_SKEY[action])
+    time.sleep(STEPSIZE)
+    win32api.keybd_event(ACTION_TO_VKEY[action], ACTION_TO_SKEY[action], 2)
+
+    #Get the reward and update the weights
+    "NOT DONE YET"
+
+    #win32api.keybd_event(0xBE, 46)
+    #win32api.keybd_event(0xBE, 46, 2)
+    #state = GameState(readGameStateFromFile())
+    #print state
 
