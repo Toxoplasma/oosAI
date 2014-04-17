@@ -16,17 +16,24 @@ BIN_BOSS_YPOS = 4299
 BIN_BOSS_XPOS = 4301
 
 STEPSIZE = 0.5
+bossDeathCounter = 0
 
 class GameState():
     def __init__(self, (xPos, yPos, orient, bossXPos, bossYPos, linkDead)):
+        global bossDeathCounter
         self.linkPos = (xPos, yPos)
         self.linkOrient = orient
         self.bossPos = (bossXPos, bossYPos)
 
         if self.bossPos == (0,0):
-            self.bossDead = True
+            if bossDeathCounter > 3:
+                self.bossDead = True
+            else:
+                bossDeathCounter += 1
+                self.bossDead = False
         else:
             self.bossDead = False
+            bossDeathCounter = 0
 
         if linkDead == 0x80:
             self.linkDead = True
@@ -35,8 +42,21 @@ class GameState():
 
     def __repr__(self):
         (lx, ly) = self.linkPos
-        ret = "Link: " + str(self.linkPos) + " orient: " + str(self.linkOrient) + ", dead: " + \
-            str(self.linkDead) + "\nBoss: " + str(self.bossPos) + " dead: " + str(self.bossDead)
+        linkString = "Link: " + str(self.linkPos) + " orient: " + str(self.linkOrient)
+        linkDeadString = ", Life status: "
+        if self.linkDead:
+            linkDeadString += "Dead"
+        else:
+            linkDeadString += "Alive"
+
+        bossString = "\nBoss: " + str(self.bossPos)
+        bossDeadString = ", Life status: "
+        if self.bossDead:
+            bossDeadString += "Dead"
+        else:
+            bossDeadString += "Alive"
+        
+        ret = linkString + linkDeadString + bossString + bossDeadString
         return ret
     
     def __str__(self):
