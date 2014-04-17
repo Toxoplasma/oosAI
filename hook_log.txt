@@ -1,0 +1,21 @@
+hook_pc1 1 -1 -1
+hook_rd1 1 -1 -1
+hook_wr1 1 9400 9410
+
+------------------------------------------------------
+
+; Any notes can follow here
+;
+; but do not modify above
+
+; Mode 0 = write into 'trace.txt' log if instruction logging is active
+; Mode 1 = write into 'hook.txt'
+;
+; <low address> <high address>
+
+Gameboy:
+- rd/wr use $0000-ffff memory map range
+- pc uses $00000-fffff ROM range
+
+Gameboy Advance:
+- rd/wr/pc use $0000:0000-ffff:ffff memory map range

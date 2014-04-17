@@ -1,5 +1,10 @@
 #Test reading in memory
 import time
+import win32api
+import win32com.client as comclt
+wsh= comclt.Dispatch("WScript.Shell")
+# switch to emulator window
+wsh.AppActivate("VisualBoyAdvance")
 
 BIN_XPOS = 4109
 BIN_YPOS = 4107
@@ -74,16 +79,10 @@ def readGameStateFromFile():
     return xPos, yPos, orient, bossXPos, bossYPos
 
 
-
-while True:
-    time.sleep(1)
-
-    print readGameStateFromFile()
-
-
-
 while True:
     time.sleep(STEPSIZE)
-
+#    win32api.keybd_event(0x41, 44)
+#    time.sleep(1)
+#    win32api.keybd_event(0x25, 44, 2)
     state = GameState(readGameStateFromFile)
 
