@@ -16,18 +16,37 @@ BIN_BOSS_YPOS = 4299
 BIN_BOSS_XPOS = 4301
 
 STEPSIZE = 0.5
+bossDeathCounter = 0
+
 
 ACTION_TO_VKEY = dict(left = 0x25, right = 0x27, up = 0x26, down = 0x28,
                         a = 0x5A, b = 0x58, getstate = 0xBE) #a is z, b is x
 ACTION_TO_SKEY = dict(left = 75, right = 77, up = 72, down = 80,
                         a = 44, b = 45, getstate = 46)
 
+class GameState():
+    def __init__(self, (xPos, yPos, orient, bossXPos, bossYPos, linkDead)):
+        global bossDeathCounter
+        self.linkPos = (xPos, yPos)
+        self.linkOrient = orient
+        self.bossPos = (bossXPos, bossYPos)
+
+        if self.bossPos == (0,0):
+            if bossDeathCounter > 3:
+                self.bossDead = True
+            else:
+                bossDeathCounter += 1
+                self.bossDead = False
+        else:
+            self.bossDead = False
+            bossDeathCounter = 0
 
 #Utility functions
 def dumpState():
     #Press period then release it
     win32api.keybd_event(ACTION_TO_VKEY['getstate'], ACTION_TO_SKEY['getstate'])
     win32api.keybd_event(ACTION_TO_VKEY['getstate'], ACTION_TO_SKEY['getstate'], 2)
+
 
 def readGameStateFromFile():
     xPos = 0
@@ -117,10 +136,23 @@ class GameState():
 
             return featureDict
 
-    def __repr__(self):
+        def __repr__(self):
         (lx, ly) = self.linkPos
-        ret = "Link: " + str(self.linkPos) + " orient: " + str(self.linkOrient) + ", dead: " + \
-            str(self.linkDead) + "\nBoss: " + str(self.bossPos) + " dead: " + str(self.bossDead)
+        linkString = "Link: " + str(self.linkPos) + " orient: " + str(self.linkOrient)
+        linkDeadString = ", Life status: "
+        if self.linkDead:
+            linkDeadString += "Dead"
+        else:
+            linkDeadString += "Alive"
+
+        bossString = "\nBoss: " + str(self.bossPos)
+        bossDeadString = ", Life status: "
+        if self.bossDead:
+            bossDeadString += "Dead"
+        else:
+            bossDeadString += "Alive"
+        
+        ret = linkString + linkDeadString + bossString + bossDeadString
         return ret
     
     def __str__(self):
