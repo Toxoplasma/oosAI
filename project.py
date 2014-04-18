@@ -16,6 +16,14 @@ BIN_BOSS_YPOS = 4299
 BIN_BOSS_XPOS = 4301
 
 STEPSIZE = 0.5
+
+LINKXDIST = 30
+LINKYDIST = 30
+
+LINKLEFT = 87
+LINKRIGHT = 85
+LINKUP = 84
+LINKDOWN = 86
 bossDeathCounter = 0
 
 #I, J, K, L controls
@@ -175,7 +183,27 @@ class QAgent():
 
 
     def getQValue(self, state, action):
-        features = state.getFeatures()
+        #Compute new state from state action pair
+        nextState = state
+        if(action == 'left'):
+            oldx, oldy = state.linkPos
+            nextState.linkPos = (oldx - LINKXDIST, oldy)
+            linkOrient = LINKLEFT
+        elif(action == 'right'):
+            oldx, oldy = state.linkPos
+            nextState.linkPos = (oldx + LINKXDIST, oldy)
+            linkOrient = LINKRIGHT
+        elif(action == 'down'):
+            oldx, oldy = state.linkPos
+            nextState.linkPos = (oldx, oldy + LINKYDIST)
+            linkOrient = LINKDOWN
+        elif(action == 'up'):
+            oldx, oldy = state.linkPos
+            nextState.linkPos = (oldx, oldy - LINKYDIST)
+            linkOrient = LINKUP
+
+
+        features = nextState.getFeatures()
         featureNames = sorted(features.keys())
 
         total = 0
