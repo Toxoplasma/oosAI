@@ -124,6 +124,28 @@ class GameState():
         else:
             self.linkDead = False
 
+    def getNextState(self, action):
+        nextState = state.copy()
+
+        if(action == 'left'):
+            oldx, oldy = state.linkPos
+            nextState.linkPos = (oldx - LINKXDIST, oldy)
+            nextState.linkOrient = LINKLEFT
+        elif(action == 'right'):
+            oldx, oldy = state.linkPos
+            nextState.linkPos = (oldx + LINKXDIST, oldy)
+            nextState.linkOrient = LINKRIGHT
+        elif(action == 'down'):
+            oldx, oldy = state.linkPos
+            nextState.linkPos = (oldx, oldy + LINKYDIST)
+            nextState.linkOrient = LINKDOWN
+        elif(action == 'up'):
+            oldx, oldy = state.linkPos
+            nextState.linkPos = (oldx, oldy - LINKYDIST)
+            nextState.linkOrient = LINKUP
+
+        return nextState
+
     def getFeatures(self):
             #f1: difference between x pos of link and boss
             f1 = self.linkPos[0] - self.bossPos[0]
@@ -184,25 +206,8 @@ class QAgent():
 
     def getQValue(self, state, action):
         #Compute new state from state action pair
-        nextState = state
-        if(action == 'left'):
-            oldx, oldy = state.linkPos
-            nextState.linkPos = (oldx - LINKXDIST, oldy)
-            linkOrient = LINKLEFT
-        elif(action == 'right'):
-            oldx, oldy = state.linkPos
-            nextState.linkPos = (oldx + LINKXDIST, oldy)
-            linkOrient = LINKRIGHT
-        elif(action == 'down'):
-            oldx, oldy = state.linkPos
-            nextState.linkPos = (oldx, oldy + LINKYDIST)
-            linkOrient = LINKDOWN
-        elif(action == 'up'):
-            oldx, oldy = state.linkPos
-            nextState.linkPos = (oldx, oldy - LINKYDIST)
-            linkOrient = LINKUP
-
-
+        nextState = state.getNextState(action)
+        
         features = nextState.getFeatures()
         featureNames = sorted(features.keys())
 
