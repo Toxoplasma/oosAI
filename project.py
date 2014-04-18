@@ -18,10 +18,10 @@ BIN_BOSS_XPOS = 4301
 STEPSIZE = 0.5
 bossDeathCounter = 0
 
-
-ACTION_TO_VKEY = dict(left = 0x25, right = 0x27, up = 0x26, down = 0x28,
+#I, J, K, L controls
+ACTION_TO_VKEY = dict(left = 0x4A, right = 0x4C, up = 0x49, down = 0x4B,
                         a = 0x5A, b = 0x58, getstate = 0xBE) #a is z, b is x
-ACTION_TO_SKEY = dict(left = 75, right = 77, up = 72, down = 80,
+ACTION_TO_SKEY = dict(left = 36, right = 38, up = 23, down = 37,
                         a = 44, b = 45, getstate = 46)
 
 class GameState():
