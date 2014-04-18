@@ -125,7 +125,7 @@ class GameState():
             self.linkDead = False
 
     def getNextState(self, action):
-        nextState = state.copy()
+        nextState = state #This should make it copy
 
         if(action == 'left'):
             oldx, oldy = state.linkPos
