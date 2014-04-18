@@ -136,7 +136,7 @@ class GameState():
 
             return featureDict
 
-        def __repr__(self):
+    def __repr__(self):
         (lx, ly) = self.linkPos
         linkString = "Link: " + str(self.linkPos) + " orient: " + str(self.linkOrient)
         linkDeadString = ", Life status: "
@@ -173,7 +173,7 @@ class QAgent():
 
 
     def getQValue(self, state, action):
-        features = stateToFeatures(state)
+        features = state.getFeatures()
         featureNames = sorted(features.keys())
 
         total = 0
