@@ -133,13 +133,13 @@ class GameState():
 
             #f3-7: link orientation
             #Up
-            f3 = (self.linkOrient == 84)
+            f3 = (self.linkOrient == LINKUP)
             #Left
-            f4 = (self.linkOrient == 87)
+            f4 = (self.linkOrient == LINKLEFT)
             #Down
-            f5 = (self.linkOrient == 86)
+            f5 = (self.linkOrient == LINKDOWN)
             #Right
-            f6 = (self.linkOrient == 85)
+            f6 = (self.linkOrient == LINKRIGHT)
 
             featureDict = dict(xDif = f1, yDif = f2,
                                up = f3, left = f4, down = f5, right = f6)
