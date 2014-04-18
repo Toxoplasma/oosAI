@@ -20,9 +20,11 @@ bossDeathCounter = 0
 
 #I, J, K, L controls
 ACTION_TO_VKEY = dict(left = 0x4A, right = 0x4C, up = 0x49, down = 0x4B,
-                        a = 0x5A, b = 0x58, getstate = 0xBE) #a is z, b is x
+                        a = 0x5A, b = 0x58, getstate = 0xBE, #a is z, b is x
+                        f1 = 0x70) 
 ACTION_TO_SKEY = dict(left = 36, right = 38, up = 23, down = 37,
-                        a = 44, b = 45, getstate = 46)
+                        a = 44, b = 45, getstate = 46,
+                        f1 = 59)
 
 class GameState():
     def __init__(self, (xPos, yPos, orient, bossXPos, bossYPos, linkDead)):
@@ -281,7 +283,26 @@ while True:
     win32api.keybd_event(ACTION_TO_VKEY[action], ACTION_TO_SKEY[action], 2)
 
     #Get the reward and update the weights
-    "NOT DONE YET"
+    gameIsOver = False
+
+    newState = GameState(readGameStateFromFile())
+
+    if newState.linkDead:
+        reward = -100
+        gameIsOver = True
+    elif newState.bossDead:
+        reward = +100
+        gameIsOver = True
+    else:
+        reward = 0
+
+    #Update
+    agent.update(state, action, newState, reward)
+    print "New weights are: " + str(agent.weights)
+
+    if gameIsOver:
+        win32api.keybd_event(ACTION_TO_VKEY['f1'], ACTION_TO_SKEY['f1'])
+        win32api.keybd_event(ACTION_TO_VKEY['f1'], ACTION_TO_SKEY['f1'], 2)
 
     #win32api.keybd_event(0xBE, 46)
     #win32api.keybd_event(0xBE, 46, 2)
