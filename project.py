@@ -388,9 +388,11 @@ while True:
         gameIsOver = True
 
     #Update
-    print "Reward is: " + str(reward)
     agent.update(state, action, newState, reward)
-    print "New weights are: " + str(agent.weights)
+
+    if turnCount % 1000 = 0:
+        print "Reward is: " + str(reward)
+        print "New weights are: " + str(agent.weights)
 
     if gameIsOver:
         win32api.keybd_event(ACTION_TO_VKEY['f1'], ACTION_TO_SKEY['f1'])
