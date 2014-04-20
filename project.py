@@ -3,6 +3,7 @@ import time
 import random
 import win32api
 import win32com.client as comclt
+import util
 
 
 #Constants
@@ -195,7 +196,7 @@ class GameState():
 #feature-based Q-learning class
 class QAgent():
     def __init__(self, numFeatures):
-        self.weights = dict()#xDif = 0, yDif = 0,
+        self.weights = util.Counter()#xDif = 0, yDif = 0,
                             #up = 0, left = 0, down = 0, right = 0)
         self.actions = ["left", "up", "right", "down", "a", "b"]
 
@@ -207,9 +208,9 @@ class QAgent():
     #To do: Try some bucketing maybe?
     def getFeatures(self, state, action):
         stateFeatures = state.getFeatures()
-        nextState = state.n = state.getNextState(action)
+        nextState = state.getNextState(action)
         nextStateFeatures = nextState.getFeatures()
-        feat = dict()
+        feat = util.Counter()
         feat[nextState] = 1.0
         feat['action=%s' % action] = 1.0
 
