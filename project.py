@@ -379,12 +379,12 @@ while True:
 
     reward = 0
     if newState.bossHit: #and (not state.bossHit):
-        reward += 10
+        reward += 1
     if newState.linkDead:
-        reward += -100
+        reward += -2
         gameIsOver = True
     elif newState.bossDead:
-        reward += +100
+        reward += +10
         gameIsOver = True
 
     #Update
