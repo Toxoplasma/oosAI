@@ -198,7 +198,7 @@ class QAgent():
     def __init__(self, numFeatures):
         self.weights = util.Counter()#xDif = 0, yDif = 0,
                             #up = 0, left = 0, down = 0, right = 0)
-        self.actions = ["left", "up", "right", "down", "a", "b"]
+        self.actions = ["left", "up", "right", "down", "b", "a"]
 
         self.epsilon = 0.1
         self.discount = 0.8 #gamma
@@ -300,10 +300,13 @@ class QAgent():
         bestAction = None
         bestScore = float("-inf")
         for action in actions:
-          Qvalue = self.getQValue(state, action)
-          if Qvalue > bestScore:
-            bestScore = Qvalue
-            bestAction = action
+            Qvalue = self.getQValue(state, action)
+            if Qvalue > bestScore:
+                bestScore = Qvalue
+                bestAction = action
+            if Qvalue == bestScore and random.uniform(0, 1) >= 0.5:
+                bestScore = Qvalue
+                bestAction = action
 
         return bestAction
 
