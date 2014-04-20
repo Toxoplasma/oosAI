@@ -17,7 +17,7 @@ BIN_BOSS_YPOS = 4299
 BIN_BOSS_XPOS = 4301
 BIN_BOSS_HIT = 4779
 
-STEPSIZE = 0.5
+STEPSIZE = 0.01
 
 LINKXDIST = 30
 LINKYDIST = 30
@@ -35,23 +35,6 @@ ACTION_TO_VKEY = dict(left = 0x4A, right = 0x4C, up = 0x49, down = 0x4B,
 ACTION_TO_SKEY = dict(left = 36, right = 38, up = 23, down = 37,
                         a = 44, b = 45, getstate = 46,
                         f1 = 59)
-
-class GameState():
-    def __init__(self, (xPos, yPos, orient, bossXPos, bossYPos, linkDead)):
-        global bossDeathCounter
-        self.linkPos = (xPos, yPos)
-        self.linkOrient = orient
-        self.bossPos = (bossXPos, bossYPos)
-
-        if self.bossPos == (0,0):
-            if bossDeathCounter > 3:
-                self.bossDead = True
-            else:
-                bossDeathCounter += 1
-                self.bossDead = False
-        else:
-            self.bossDead = False
-            bossDeathCounter = 0
 
 #Utility functions
 def dumpState():
@@ -114,7 +97,7 @@ def argMax(argValues):
 
 #GAMESTATE CLASS
 class GameState():
-    def __init__(self, (xPos, yPos, orient, bossXPos, bossYPos, linkDead)):
+    def __init__(self, (xPos, yPos, orient, bossXPos, bossYPos, linkDead, bossHit)):
         self.linkPos = (xPos, yPos)
         self.linkOrient = orient
         self.bossPos = (bossXPos, bossYPos)
@@ -390,7 +373,7 @@ while True:
     newState = GameState(readGameStateFromFile())
 
     reward = 0
-    if newstate.bossHit: #and (not state.bossHit):
+    if newState.bossHit: #and (not state.bossHit):
         reward += 10
     if newState.linkDead:
         reward += -100
@@ -402,7 +385,7 @@ while True:
     #Update
     print "Reward is: " + str(reward)
     agent.update(state, action, newState, reward)
-    #print "New weights are: " + str(agent.weights)
+    print "New weights are: " + str(agent.weights)
 
     if gameIsOver:
         win32api.keybd_event(ACTION_TO_VKEY['f1'], ACTION_TO_SKEY['f1'])
