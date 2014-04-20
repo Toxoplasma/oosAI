@@ -207,6 +207,12 @@ class QAgent():
         # feat[nextState] = 1.0
         feat['action=%s' % action] = 1.0
 
+        #position stuff:
+        feat['linkxPos=%s' % state.linkxPos]
+        feat['linkyPos=%s' % state.linkyPos]
+        feat['bossxPos=%s' % state.bossxPos]
+        feat['bossyPos=%s' % state.bossyPos]
+
         #Xdif buckets
         if nextStateFeatures["xDif"] < -90:
             feat['xDif<-90'] = 1.0
