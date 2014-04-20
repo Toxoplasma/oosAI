@@ -363,7 +363,7 @@ while True:
     
 
     action = agent.getAction(state)
-    if turnCount % 1000 = 0:
+    if turnCount % 100 == 0:
         print "State is: " + str(state)
         print "Action is: " + action
 
@@ -390,7 +390,7 @@ while True:
     #Update
     agent.update(state, action, newState, reward)
 
-    if turnCount % 1000 = 0:
+    if turnCount % 100 == 0:
         print "Reward is: " + str(reward)
         print "New weights are: " + str(agent.weights)
 
