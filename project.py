@@ -371,13 +371,18 @@ agent = QAgent(len(state.getFeatures()))
 
 
 #Main game loop
+turnCount = 0
 while True:
+    turnCount+= 1
+
     dumpState()
     state = GameState(readGameStateFromFile())
-    print "State is: " + str(state)
+    
 
     action = agent.getAction(state)
-    print "Action is: " + action
+    if turnCount % 1000 = 0:
+        print "State is: " + str(state)
+        print "Action is: " + action
 
     #Do the action for one STEP
     win32api.keybd_event(ACTION_TO_VKEY[action], ACTION_TO_SKEY[action])
