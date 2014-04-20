@@ -15,6 +15,7 @@ BIN_LINK_DEAD = 4128
 
 BIN_BOSS_YPOS = 4299
 BIN_BOSS_XPOS = 4301
+BIN_BOSS_HIT = 4779
 
 STEPSIZE = 0.5
 
@@ -66,6 +67,7 @@ def readGameStateFromFile():
     bossXPos = 0
     bossYPos = 0
     linkDead = 0
+    bossHit = 0
 
     #Open in read binary mode
     f = open("gb_wram.bin", "rb")
@@ -91,13 +93,15 @@ def readGameStateFromFile():
                 bossYPos = byte
             if byteIndex == BIN_LINK_DEAD:
                 linkDead = byte
+            if byteIndex == BIN_BOSS_HIT:
+                bossHit = byte
 
 
             byteIndex += 1
     finally:
         f.close()
 
-    return xPos, yPos, orient, bossXPos, bossYPos, linkDead
+    return xPos, yPos, orient, bossXPos, bossYPos, linkDead, bossHit
 
 def argMax(argValues):
     def pairMax((ak, av), (bk, bv)):
@@ -124,6 +128,12 @@ class GameState():
             self.linkDead = True
         else:
             self.linkDead = False
+
+        if bossHit != 0:
+            self.bossHit = True
+            print "Boss is hit!"
+        else:
+            self.bossHit = False
 
     def getNextState(self, action):
         nextState = state #This should make it copy
@@ -379,18 +389,20 @@ while True:
 
     newState = GameState(readGameStateFromFile())
 
+    reward = 0
+    if newstate.bossHit: #and (not state.bossHit):
+        reward += 10
     if newState.linkDead:
-        reward = -100
+        reward += -100
         gameIsOver = True
     elif newState.bossDead:
-        reward = +100
+        reward += +100
         gameIsOver = True
-    else:
-        reward = 0
 
     #Update
+    print "Reward is: " + str(reward)
     agent.update(state, action, newState, reward)
-    print "New weights are: " + str(agent.weights)
+    #print "New weights are: " + str(agent.weights)
 
     if gameIsOver:
         win32api.keybd_event(ACTION_TO_VKEY['f1'], ACTION_TO_SKEY['f1'])
