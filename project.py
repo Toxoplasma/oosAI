@@ -17,7 +17,7 @@ BIN_BOSS_YPOS = 4299
 BIN_BOSS_XPOS = 4301
 BIN_BOSS_HIT = 4779
 
-STEPSIZE = 0.01
+STEPSIZE = 0.1
 
 LINKXDIST = 30
 LINKYDIST = 30
@@ -208,10 +208,10 @@ class QAgent():
         feat['action=%s' % action] = 1.0
 
         #position stuff:
-        feat['linkxPos=%s' % state.linkxPos]
-        feat['linkyPos=%s' % state.linkyPos]
-        feat['bossxPos=%s' % state.bossxPos]
-        feat['bossyPos=%s' % state.bossyPos]
+        feat['linkxPos=%s' % state.linkPos[0]]
+        feat['linkyPos=%s' % state.linkPos[1]]
+        feat['bossxPos=%s' % state.bossPos[0]]
+        feat['bossyPos=%s' % state.bossPos[1]]
 
         #Xdif buckets
         if nextStateFeatures["xDif"] < -90:
