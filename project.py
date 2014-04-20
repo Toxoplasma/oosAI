@@ -188,7 +188,7 @@ class GameState():
 
 #feature-based Q-learning class
 class QAgent():
-    def __init__(self, numFeatures):
+    def __init__(self):
         self.weights = util.Counter()#xDif = 0, yDif = 0,
                             #up = 0, left = 0, down = 0, right = 0)
         self.actions = ["left", "up", "right", "down", "b", "a"]
@@ -248,6 +248,8 @@ class QAgent():
             feat['yDif<90'] = 1.0
         else:
             feat['yDif>90'] = 1.0
+
+        #Orientation
 
         #Add a guy is hittable feature or a hits guy feature
 
@@ -310,7 +312,6 @@ class QAgent():
         return bestAction
 
     def getAction(self, state):
-        features = state.getFeatures()
         legalActions = self.actions
 
         action = None
@@ -356,7 +357,7 @@ wsh.AppActivate("VisualBoyAdvance")
 
 #Make our learner
 state = GameState(readGameStateFromFile())
-agent = QAgent(len(state.getFeatures()))
+agent = QAgent()
 
 
 #Main game loop
@@ -398,7 +399,7 @@ while True:
 
     if turnCount % 100 == 0:
         print "Reward is: " + str(reward)
-        print "New weights are: " + str(agent.weights)
+        print "New weights are: "
         for key in sorted(agent.weights.keys()):
             print "  " + key + ": " + str(agent.weights[key])
 
