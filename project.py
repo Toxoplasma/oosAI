@@ -393,6 +393,8 @@ while True:
     if turnCount % 100 == 0:
         print "Reward is: " + str(reward)
         print "New weights are: " + str(agent.weights)
+        for key in sorted(agent.weights.keys()):
+            print "  " + key + ": " + str(agent.weights[key])
 
     if gameIsOver:
         win32api.keybd_event(ACTION_TO_VKEY['f1'], ACTION_TO_SKEY['f1'])
