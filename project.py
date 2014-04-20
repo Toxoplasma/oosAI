@@ -30,10 +30,10 @@ bossDeathCounter = 0
 
 #I, J, K, L controls
 ACTION_TO_VKEY = dict(left = 0x4A, right = 0x4C, up = 0x49, down = 0x4B,
-                        a = 0x5A, b = 0x58, getstate = 0xBE, #a is z, b is x
+                        a = 0x5A, getstate = 0xBE, #a is z,
                         f1 = 0x70) 
 ACTION_TO_SKEY = dict(left = 36, right = 38, up = 23, down = 37,
-                        a = 44, b = 45, getstate = 46,
+                        a = 44, getstate = 46,
                         f1 = 59)
 
 #Utility functions
@@ -191,7 +191,7 @@ class QAgent():
     def __init__(self, numFeatures):
         self.weights = util.Counter()#xDif = 0, yDif = 0,
                             #up = 0, left = 0, down = 0, right = 0)
-        self.actions = ["left", "up", "right", "down", "b", "a"]
+        self.actions = ["left", "up", "right", "down", "a"]
 
         self.epsilon = 0.1
         self.discount = 0.8 #gamma
@@ -347,8 +347,6 @@ class QAgent():
 
 
 
-
-
 #Stuff we do at start
 #Create a windows object and use it to switch to VBA
 wsh= comclt.Dispatch("WScript.Shell")
@@ -385,7 +383,7 @@ while True:
 
     reward = 0
     if newState.bossHit: #and (not state.bossHit):
-        reward += 1
+        reward += +5
     if newState.linkDead:
         reward += -2
         gameIsOver = True
