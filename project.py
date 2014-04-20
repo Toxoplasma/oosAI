@@ -221,7 +221,7 @@ class QAgent():
         nextState = state.getNextState(action)
         nextStateFeatures = nextState.getFeatures()
         feat = util.Counter()
-        feat[nextState] = 1.0
+        # feat[nextState] = 1.0
         feat['action=%s' % action] = 1.0
 
         #Xdif buckets
