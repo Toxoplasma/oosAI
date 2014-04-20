@@ -205,46 +205,46 @@ class QAgent():
 
     #Modeled after simpleExtractor
     #To do: Try some bucketing maybe?
-    def getFeatures(state, action):
+    def getFeatures(self, state, action):
         stateFeatures = state.getFeatures()
-        nextState = state.nextState(action)
+        nextState = state.n = state.getNextState(action)
         nextStateFeatures = nextState.getFeatures()
         feat = dict()
         feat[nextState] = 1.0
         feat['action=%s' % action] = 1.0
 
         #Xdif buckets
-        if nextStateFeatures.xDif < -90:
+        if nextStateFeatures["xDif"] < -90:
             feat['xDif<-90'] = 1.0
-        elif nextStateFeatures.xDif < -60:
+        elif nextStateFeatures["xDif"] < -60:
             feat['xDif<-60'] = 1.0
-        elif nextStateFeatures.xDif < -30:
+        elif nextStateFeatures["xDif"] < -30:
             feat['xDif<-30'] = 1.0
-        elif nextStateFeatures.xDif < 0:
+        elif nextStateFeatures["xDif"] < 0:
             feat['xDif<0'] = 1.0
-        elif nextStateFeatures.xDif < 30:
+        elif nextStateFeatures["xDif"] < 30:
             feat['xDif<30'] = 1.0
-        elif nextStateFeatures.xDif < 60:
+        elif nextStateFeatures["xDif"] < 60:
             feat['xDif<60'] = 1.0
-        elif nextStateFeatures.xDif < 90:
+        elif nextStateFeatures["xDif"] < 90:
             feat['xDif<90'] = 1.0
         else:
             feat['xDif>90'] = 1.0
 
         #ydif buckets
-        if nextStateFeatures.yDif < -90:
+        if nextStateFeatures["yDif"] < -90:
             feat['yDif<-90'] = 1.0
-        elif nextStateFeatures.yDif < -60:
+        elif nextStateFeatures["yDif"] < -60:
             feat['yDif<-60'] = 1.0
-        elif nextStateFeatures.yDif < -30:
+        elif nextStateFeatures["yDif"] < -30:
             feat['yDif<-30'] = 1.0
-        elif nextStateFeatures.yDif < 0:
+        elif nextStateFeatures["yDif"] < 0:
             feat['yDif<0'] = 1.0
-        elif nextStateFeatures.yDif < 30:
+        elif nextStateFeatures["yDif"] < 30:
             feat['yDif<30'] = 1.0
-        elif nextStateFeatures.yDif < 60:
+        elif nextStateFeatures["yDif"] < 60:
             feat['yDif<60'] = 1.0
-        elif nextStateFeatures.yDif < 90:
+        elif nextStateFeatures["yDif"] < 90:
             feat['yDif<90'] = 1.0
         else:
             feat['yDif>90'] = 1.0
