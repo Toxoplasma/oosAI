@@ -195,20 +195,75 @@ class GameState():
 #feature-based Q-learning class
 class QAgent():
     def __init__(self, numFeatures):
-        self.weights = dict(xDif = 0, yDif = 0,
-                            up = 0, left = 0, down = 0, right = 0)
+        self.weights = dict()#xDif = 0, yDif = 0,
+                            #up = 0, left = 0, down = 0, right = 0)
         self.actions = ["left", "up", "right", "down", "a", "b"]
 
         self.epsilon = 0.1
         self.discount = 0.8 #gamma
         self.alpha = 0.2 #learning rate
 
+    #Modeled after simpleExtractor
+    #To do: Try some bucketing maybe?
+    def getFeatures(state, action):
+        stateFeatures = state.getFeatures()
+        nextState = state.nextState(action)
+        nextStateFeatures = nextState.getFeatures()
+        feat = dict()
+        feat[nextState] = 1.0
+        feat['action=%s' % action] = 1.0
+
+        #Xdif buckets
+        if nextStateFeatures.xDif < -90:
+            feat['xDif<-90'] = 1.0
+        elif nextStateFeatures.xDif < -60:
+            feat['xDif<-60'] = 1.0
+        elif nextStateFeatures.xDif < -30:
+            feat['xDif<-30'] = 1.0
+        elif nextStateFeatures.xDif < 0:
+            feat['xDif<0'] = 1.0
+        elif nextStateFeatures.xDif < 30:
+            feat['xDif<30'] = 1.0
+        elif nextStateFeatures.xDif < 60:
+            feat['xDif<60'] = 1.0
+        elif nextStateFeatures.xDif < 90:
+            feat['xDif<90'] = 1.0
+        else:
+            feat['xDif>90'] = 1.0
+
+        #ydif buckets
+        if nextStateFeatures.yDif < -90:
+            feat['yDif<-90'] = 1.0
+        elif nextStateFeatures.yDif < -60:
+            feat['yDif<-60'] = 1.0
+        elif nextStateFeatures.yDif < -30:
+            feat['yDif<-30'] = 1.0
+        elif nextStateFeatures.yDif < 0:
+            feat['yDif<0'] = 1.0
+        elif nextStateFeatures.yDif < 30:
+            feat['yDif<30'] = 1.0
+        elif nextStateFeatures.yDif < 60:
+            feat['yDif<60'] = 1.0
+        elif nextStateFeatures.yDif < 90:
+            feat['yDif<90'] = 1.0
+        else:
+            feat['yDif>90'] = 1.0
+
+        #Add a guy is hittable feature or a hits guy feature
+
+        #feat['xd=%d' % ] = 1.0
+        #feat['yd=%d' % nextStateFeatures.yDif] = 1.0
+        feat['bias'] = 1.0
+        #feat[(state, action)] = 1.0
+        return feat
+
 
     def getQValue(self, state, action):
         #Compute new state from state action pair
-        nextState = state.getNextState(action)
-        
-        features = nextState.getFeatures()
+        #Simple extractor
+        features = self.getFeatures(state, action)
+        #features = nextState.getFeatures()
+
         featureNames = sorted(features.keys())
 
         total = 0
@@ -270,7 +325,7 @@ class QAgent():
            Should update your weights based on transition
         """
         "*** YOUR CODE HERE ***"
-        features = state.getFeatures() #self.featExtractor.getFeatures(state, action)
+        features = self.getFeatures(state, action) #self.featExtractor.getFeatures(state, action)
         featureNames = featureNames = sorted(features.keys())
 
         newWeights = self.weights.copy()
