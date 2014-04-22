@@ -402,6 +402,8 @@ while True:
     #Get the reward and update the weights
     gameIsOver = False
 
+    dumpState()
+
     newState = GameState(readGameStateFromFile())
 
     reward = 0
