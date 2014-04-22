@@ -412,12 +412,15 @@ while True:
 
     #Update
     agent.update(state, action, newState, reward)
+    print "Action is: " + str(action) + ", Reward is: " + str(reward)
 
     if turnCount % 100 == 0:
-        print "Reward is: " + str(reward)
+        
         print "New weights are: "
         for key in sorted(agent.weights.keys()):
-            print "  " + key + ": " + str(agent.weights[key])
+            if key in ['linkUp', 'linkRight', 'linkLeft', 'linkDown', 
+                'action=a', 'action=left', 'action=right', 'action=down', 'action=up']:
+                print "  " + key + ": " + str(agent.weights[key])
 
     if gameIsOver:
         win32api.keybd_event(ACTION_TO_VKEY['f1'], ACTION_TO_SKEY['f1'])
