@@ -112,8 +112,11 @@ class GameState():
         self.linkHitValue = linkHit
 
         if self.bossPos == (0,0):
-            self.bossDead = True
+            bossDeathCounter += 1
+            if bossDeathCounter >= 3:
+                self.bossDead = True
         else:
+            bossDeathCounter = 0
             self.bossDead = False
 
         if linkDead == 0x80:
