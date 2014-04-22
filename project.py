@@ -106,10 +106,12 @@ def argMax(argValues):
 #GAMESTATE CLASS
 class GameState():
     def __init__(self, (xPos, yPos, orient, bossXPos, bossYPos, linkDead, bossHit, linkHit)):
+        global bossDeathCounter
         self.linkPos = (xPos, yPos)
         self.linkOrient = orient
         self.bossPos = (bossXPos, bossYPos)
         self.linkHitValue = linkHit
+        self.bossDead = False
 
         if self.bossPos == (0,0):
             bossDeathCounter += 1
