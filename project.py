@@ -385,6 +385,7 @@ while True:
     turnCount+= 1
 
     dumpState()
+    time.sleep(.01)
     state = GameState(readGameStateFromFile())
     
 
@@ -406,6 +407,7 @@ while True:
     gameIsOver = False
 
     dumpState()
+    time.sleep(.01)
 
     newState = GameState(readGameStateFromFile())
 
