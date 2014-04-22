@@ -195,9 +195,9 @@ class QAgent():
                             #up = 0, left = 0, down = 0, right = 0)
         self.actions = ["left", "up", "right", "down", "a"]
 
-        self.epsilon = 0.1
+        self.epsilon = 0.25
         self.discount = 0.8 #gamma
-        self.alpha = 0.2 #learning rate
+        self.alpha = 0.5 #learning rate
 
     #Modeled after simpleExtractor
     #To do: Try some bucketing maybe?
@@ -395,12 +395,12 @@ while True:
 
     reward = 0
     if newState.bossHit: #and (not state.bossHit):
-        reward += +5
+        reward += 10
     if newState.linkDead:
         reward += -2
         gameIsOver = True
     elif newState.bossDead:
-        reward += +10
+        reward += 10
         gameIsOver = True
 
     #Update
