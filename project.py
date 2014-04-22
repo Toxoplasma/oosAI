@@ -11,6 +11,7 @@ BIN_XPOS = 4109
 BIN_YPOS = 4107
 BIN_LINK_HIT = 4106
 BIN_ORIENT = 4146
+BIN_LINK_WALLS = 4147 #ypos + 3*16 - 8
 
 BIN_LINK_DEAD = 4128
 
@@ -57,6 +58,7 @@ def readGameStateFromFile():
     linkDead = 0
     bossHit = 0
     linkHit = 0
+    walls = 0
 
     #Open in read binary mode
     f = open("gb_wram.bin", "rb")
@@ -78,6 +80,8 @@ def readGameStateFromFile():
                 linkHit = byte
             if byteIndex == BIN_ORIENT:
                 orient = byte
+            if byteIndex == BIN_LINK_WALLS:
+                walls = byte
             if byteIndex == BIN_BOSS_XPOS:
                 bossXPos = byte
             if byteIndex == BIN_BOSS_YPOS:
@@ -92,7 +96,7 @@ def readGameStateFromFile():
     finally:
         f.close()
 
-    return xPos, yPos, orient, bossXPos, bossYPos, linkDead, bossHit, linkHit
+    return xPos, yPos, orient, bossXPos, bossYPos, linkDead, bossHit, linkHit, walls
 
 def argMax(argValues):
     def pairMax((ak, av), (bk, bv)):
@@ -105,13 +109,28 @@ def argMax(argValues):
 
 #GAMESTATE CLASS
 class GameState():
-    def __init__(self, (xPos, yPos, orient, bossXPos, bossYPos, linkDead, bossHit, linkHit)):
+    def __init__(self, (xPos, yPos, orient, bossXPos, bossYPos, linkDead, bossHit, linkHit, walls)):
         global bossDeathCounter
         self.linkPos = (xPos, yPos)
         self.linkOrient = orient
         self.bossPos = (bossXPos, bossYPos)
         self.linkHitValue = linkHit
         self.bossDead = False
+
+        #Walls
+        if walls % 16 == 0x0c:
+            print "left wall!"
+            self.leftWall = True
+        if walls % 16 == 0x03:
+            print "right wall!"
+            self.rightWal = True
+        if walls / 16 == 0x0c:
+            print "top wall!"
+            self.topWall = True
+        if walls / 16 == 0x0c:
+            print "bottom wall!"
+            self.bottomWall = True
+
 
         if self.bossPos == (0,0):
             bossDeathCounter += 1
@@ -136,22 +155,27 @@ class GameState():
         nextState = state #This should make it copy
 
         if(action == 'left'):
-            oldx, oldy = state.linkPos
-            nextState.linkPos = (oldx - LINKXDIST, oldy)
+            if not state.leftWall:
+                oldx, oldy = state.linkPos
+                nextState.linkPos = (oldx - LINKXDIST, oldy)
             nextState.linkOrient = LINKLEFT
         elif(action == 'right'):
-            oldx, oldy = state.linkPos
-            nextState.linkPos = (oldx + LINKXDIST, oldy)
+            if not state.rightWall:
+                oldx, oldy = state.linkPos
+                nextState.linkPos = (oldx + LINKXDIST, oldy)
             nextState.linkOrient = LINKRIGHT
         elif(action == 'down'):
-            oldx, oldy = state.linkPos
-            nextState.linkPos = (oldx, oldy + LINKYDIST)
+            if not state.bottomWall:
+                oldx, oldy = state.linkPos
+                nextState.linkPos = (oldx, oldy + LINKYDIST)
             nextState.linkOrient = LINKDOWN
         elif(action == 'up'):
-            oldx, oldy = state.linkPos
-            nextState.linkPos = (oldx, oldy - LINKYDIST)
+            if not state.topWall:
+                oldx, oldy = state.linkPos
+                nextState.linkPos = (oldx, oldy - LINKYDIST)
             nextState.linkOrient = LINKUP
 
+        print "copy?", nextState.linkPos == state.linkPos
         return nextState
 
     def getFeatures(self):
