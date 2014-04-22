@@ -198,7 +198,7 @@ class QAgent():
     def __init__(self):
         self.weights = util.Counter()#xDif = 0, yDif = 0,
                             #up = 0, left = 0, down = 0, right = 0)
-        self.actions = ["left", "up", "right", "down", "a"]
+        self.actions = ["right", "down", "up", "left", "a"]
 
         self.epsilon = 0.25
         self.discount = 0.8 #gamma
