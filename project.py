@@ -126,22 +126,17 @@ class GameState():
 
         #Walls
         if walls % 16 == 0x0c:
-            print "left wall!"
             self.leftWall = True
         if walls % 16 == 0x03:
-            print "right wall!"
             self.rightWall = True
         if walls / 16 == 0x0c:
-            print "top wall!"
             self.topWall = True
-        if walls / 16 == 0x0c:
-            print "bottom wall!"
+        if walls / 16 == 0x03:
             self.bottomWall = True
-
 
         if self.bossPos == (0,0):
             bossDeathCounter += 1
-            if bossDeathCounter >= 3:
+            if bossDeathCounter >= 5:
                 self.bossDead = True
         else:
             bossDeathCounter = 0
@@ -159,7 +154,7 @@ class GameState():
             self.bossHit = False
 
     def getNextState(self, action):
-        nextState = GameState((0, 0, 0, 0, 0, 0, 0, 0, 0))
+        nextState = GameState((0, 0, 0, 2, 2, 0, 0, 0, 0))
         nextState.copy(state) #This should make it copy
 
         if(action == 'left'):
@@ -183,7 +178,6 @@ class GameState():
                 nextState.linkPos = (oldx, oldy - LINKYDIST)
             nextState.linkOrient = LINKUP
 
-        print "copy?", nextState.linkPos == state.linkPos
         return nextState
 
     def getFeatures(self):
