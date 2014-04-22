@@ -56,6 +56,7 @@ def readGameStateFromFile():
     bossYPos = 0
     linkDead = 0
     bossHit = 0
+    linkHit = 0
 
     #Open in read binary mode
     f = open("gb_wram.bin", "rb")
@@ -406,6 +407,7 @@ while True:
     reward = 0
     if state.linkHitValue != newState.linkHitValue and \
         state.linkHitValue != 0 and newState.linkHitValue != 0:
+        print "Link got hit! Do better!"
         reward += -1
     if newState.bossHit: #and (not state.bossHit):
         reward += 10
@@ -413,7 +415,7 @@ while True:
         reward += -2
         gameIsOver = True
     elif newState.bossDead:
-        reward += 10
+        reward += 100
         gameIsOver = True
 
     #Update
