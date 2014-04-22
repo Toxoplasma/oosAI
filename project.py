@@ -222,6 +222,19 @@ class GameState():
     def __str__(self):
         return self.__repr__()
 
+    def copy(self, state):
+        self.linkPos = state.linkPos
+        self.linkOrient = state.linkOrient
+        self.linkDead = state.linkDead
+        self.bossPos = state.bossPos
+        self.linkHitValue = state.linkHitValue
+        self.bossDead = state.bossDead
+        self.bossHit = state.bossHit
+        self.leftWall = state.leftWall
+        self.topWall = state.topWall
+        self.rightWall = state.rightWall
+        self.bottomWall = state.bottomWall
+
 
 
 #feature-based Q-learning class
