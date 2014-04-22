@@ -159,7 +159,7 @@ class GameState():
             self.bossHit = False
 
     def getNextState(self, action):
-        nextState = GameState()
+        nextState = GameState((0, 0, 0, 0, 0, 0, 0, 0, 0))
         nextState.copy(state) #This should make it copy
 
         if(action == 'left'):
