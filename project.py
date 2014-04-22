@@ -217,7 +217,7 @@ class QAgent():
         nextStateFeatures = nextState.getFeatures()
         feat = util.Counter()
         # feat[nextState] = 1.0
-        feat['action=%s' % action] = 1.0
+        #feat['action=%s' % action] = 1.0
 
         #position stuff:
         #feat['linkxPos=%s' % state.linkPos[0]]
