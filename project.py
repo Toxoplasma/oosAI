@@ -109,6 +109,9 @@ def argMax(argValues):
 
 #GAMESTATE CLASS
 class GameState():
+    def __init__(self):
+        'hi'
+
     def __init__(self, (xPos, yPos, orient, bossXPos, bossYPos, linkDead, bossHit, linkHit, walls)):
         global bossDeathCounter
         self.linkPos = (xPos, yPos)
@@ -156,7 +159,8 @@ class GameState():
             self.bossHit = False
 
     def getNextState(self, action):
-        nextState = state #This should make it copy
+        nextState = GameState()
+        nextState.copy(state) #This should make it copy
 
         if(action == 'left'):
             if not state.leftWall:
