@@ -116,6 +116,10 @@ class GameState():
         self.bossPos = (bossXPos, bossYPos)
         self.linkHitValue = linkHit
         self.bossDead = False
+        self.leftWall = False
+        self.rightWall = False
+        self.topWall = False
+        self.bottomWall = False
 
         #Walls
         if walls % 16 == 0x0c:
@@ -123,7 +127,7 @@ class GameState():
             self.leftWall = True
         if walls % 16 == 0x03:
             print "right wall!"
-            self.rightWal = True
+            self.rightWall = True
         if walls / 16 == 0x0c:
             print "top wall!"
             self.topWall = True
