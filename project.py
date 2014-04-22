@@ -28,6 +28,8 @@ LINKUP = 84
 LINKDOWN = 86
 bossDeathCounter = 0
 
+BUCKETSIZE = 10
+
 #I, J, K, L controls
 ACTION_TO_VKEY = dict(left = 0x4A, right = 0x4C, up = 0x49, down = 0x4B,
                         a = 0x5A, getstate = 0xBE, #a is z,
@@ -214,42 +216,51 @@ class QAgent():
         #feat['bossyPos=%s' % state.bossPos[1]]
 
         #Xdif buckets
-        if nextStateFeatures["xDif"] < -90:
-            feat['xDif<-90'] = 1.0
-        elif nextStateFeatures["xDif"] < -60:
-            feat['xDif<-60'] = 1.0
-        elif nextStateFeatures["xDif"] < -30:
-            feat['xDif<-30'] = 1.0
-        elif nextStateFeatures["xDif"] < 0:
-            feat['xDif<0'] = 1.0
-        elif nextStateFeatures["xDif"] < 30:
-            feat['xDif<30'] = 1.0
-        elif nextStateFeatures["xDif"] < 60:
-            feat['xDif<60'] = 1.0
-        elif nextStateFeatures["xDif"] < 90:
-            feat['xDif<90'] = 1.0
-        else:
-            feat['xDif>90'] = 1.0
+        xDifBucket = int(nextStateFeatures["xDif"] / BUCKETSIZE)
+        feat['xDif<%d' % xDifBucket] = 1.0
+        yDifBucket = int(nextStateFeatures["yDif"] / BUCKETSIZE)
+        feat['yDif<%d' % yDifBucket] = 1.0
+
+        # if nextStateFeatures["xDif"] < -90:
+        #     feat['xDif<-90'] = 1.0
+        # elif nextStateFeatures["xDif"] < -60:
+        #     feat['xDif<-60'] = 1.0
+        # elif nextStateFeatures["xDif"] < -30:
+        #     feat['xDif<-30'] = 1.0
+        # elif nextStateFeatures["xDif"] < 0:
+        #     feat['xDif<0'] = 1.0
+        # elif nextStateFeatures["xDif"] < 30:
+        #     feat['xDif<30'] = 1.0
+        # elif nextStateFeatures["xDif"] < 60:
+        #     feat['xDif<60'] = 1.0
+        # elif nextStateFeatures["xDif"] < 90:
+        #     feat['xDif<90'] = 1.0
+        # else:
+        #     feat['xDif>90'] = 1.0
 
         #ydif buckets
-        if nextStateFeatures["yDif"] < -90:
-            feat['yDif<-90'] = 1.0
-        elif nextStateFeatures["yDif"] < -60:
-            feat['yDif<-60'] = 1.0
-        elif nextStateFeatures["yDif"] < -30:
-            feat['yDif<-30'] = 1.0
-        elif nextStateFeatures["yDif"] < 0:
-            feat['yDif<0'] = 1.0
-        elif nextStateFeatures["yDif"] < 30:
-            feat['yDif<30'] = 1.0
-        elif nextStateFeatures["yDif"] < 60:
-            feat['yDif<60'] = 1.0
-        elif nextStateFeatures["yDif"] < 90:
-            feat['yDif<90'] = 1.0
-        else:
-            feat['yDif>90'] = 1.0
+        # if nextStateFeatures["yDif"] < -90:
+        #     feat['yDif<-90'] = 1.0
+        # elif nextStateFeatures["yDif"] < -60:
+        #     feat['yDif<-60'] = 1.0
+        # elif nextStateFeatures["yDif"] < -30:
+        #     feat['yDif<-30'] = 1.0
+        # elif nextStateFeatures["yDif"] < 0:
+        #     feat['yDif<0'] = 1.0
+        # elif nextStateFeatures["yDif"] < 30:
+        #     feat['yDif<30'] = 1.0
+        # elif nextStateFeatures["yDif"] < 60:
+        #     feat['yDif<60'] = 1.0
+        # elif nextStateFeatures["yDif"] < 90:
+        #     feat['yDif<90'] = 1.0
+        # else:
+        #     feat['yDif>90'] = 1.0
 
         #Orientation
+        if (nextState.linkOrient == LINKUP): feat['linkUp'] = 1.0
+        if (nextState.linkOrient == LINKLEFT): feat['linkLeft'] = 1.0
+        if (nextState.linkOrient == LINKDOWN): feat['linkDown'] = 1.0
+        if (nextState.linkOrient == LINKRIGHT): feat['linkRight'] = 1.0
 
         #Add a guy is hittable feature or a hits guy feature
 
