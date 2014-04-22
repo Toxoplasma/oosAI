@@ -9,6 +9,7 @@ import util
 #Constants
 BIN_XPOS = 4109
 BIN_YPOS = 4107
+BIN_LINK_HIT = 4106
 BIN_ORIENT = 4146
 
 BIN_LINK_DEAD = 4128
@@ -70,6 +71,8 @@ def readGameStateFromFile():
                 xPos = byte
             if byteIndex == BIN_YPOS:
                 yPos = byte
+            if byteIndex == BIN_LINK_HIT:
+                linkHit = byte
             if byteIndex == BIN_ORIENT:
                 orient = byte
             if byteIndex == BIN_BOSS_XPOS:
@@ -86,7 +89,7 @@ def readGameStateFromFile():
     finally:
         f.close()
 
-    return xPos, yPos, orient, bossXPos, bossYPos, linkDead, bossHit
+    return xPos, yPos, orient, bossXPos, bossYPos, linkDead, bossHit, linkHit
 
 def argMax(argValues):
     def pairMax((ak, av), (bk, bv)):
@@ -99,10 +102,11 @@ def argMax(argValues):
 
 #GAMESTATE CLASS
 class GameState():
-    def __init__(self, (xPos, yPos, orient, bossXPos, bossYPos, linkDead, bossHit)):
+    def __init__(self, (xPos, yPos, orient, bossXPos, bossYPos, linkDead, bossHit, linkHit)):
         self.linkPos = (xPos, yPos)
         self.linkOrient = orient
         self.bossPos = (bossXPos, bossYPos)
+        self.linkHitValue = linkHit
 
         if self.bossPos == (0,0):
             self.bossDead = True
@@ -394,6 +398,9 @@ while True:
     newState = GameState(readGameStateFromFile())
 
     reward = 0
+    if state.linkHitValue != newState.linkHitValue and \
+        state.linkHitValue != 0 and newState.linkHitValue != 0:
+        reward += -1
     if newState.bossHit: #and (not state.bossHit):
         reward += +5
     if newState.linkDead:
