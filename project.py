@@ -31,6 +31,8 @@ bossDeathCounter = 0
 
 BUCKETSIZE = 10
 
+SLASHPERCENT = 4
+
 #I, J, K, L controls
 ACTION_TO_VKEY = dict(left = 0x4A, right = 0x4C, up = 0x49, down = 0x4B,
                         a = 0x5A, getstate = 0xBE, #a is z,
@@ -383,6 +385,10 @@ while True:
     
 
     action = agent.getAction(state)
+
+    if turnCount % SLASHPERCENT == 0:
+        action = 'a'
+    
     if turnCount % 100 == 0:
         print "State is: " + str(state)
         print "Action is: " + action
