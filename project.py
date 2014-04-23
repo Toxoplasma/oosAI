@@ -315,6 +315,12 @@ class QAgent():
             feat['hitsBoss'] = 1.0
 
 
+        #Do we run into aqua?
+        if -35 < xdif and xdif < 25 and \
+           -50 < ydif and ydif < 20 and:
+           feat['insideBoss'] = 1.0
+
+
         #Orientation
         # if (nextState.linkOrient == LINKUP): feat['linkUp'] = 1.0
         # if (nextState.linkOrient == LINKLEFT): feat['linkLeft'] = 1.0
