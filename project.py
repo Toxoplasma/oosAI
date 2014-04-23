@@ -1,4 +1,4 @@
-#Imports
+Imports
 import time
 import random
 import win32api
@@ -316,10 +316,10 @@ class QAgent():
 
 
         #Orientation
-        if (nextState.linkOrient == LINKUP): feat['linkUp'] = 1.0
-        if (nextState.linkOrient == LINKLEFT): feat['linkLeft'] = 1.0
-        if (nextState.linkOrient == LINKDOWN): feat['linkDown'] = 1.0
-        if (nextState.linkOrient == LINKRIGHT): feat['linkRight'] = 1.0
+        # if (nextState.linkOrient == LINKUP): feat['linkUp'] = 1.0
+        # if (nextState.linkOrient == LINKLEFT): feat['linkLeft'] = 1.0
+        # if (nextState.linkOrient == LINKDOWN): feat['linkDown'] = 1.0
+        # if (nextState.linkOrient == LINKRIGHT): feat['linkRight'] = 1.0
 
         #Add a guy is hittable feature or a hits guy feature
 
