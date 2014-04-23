@@ -11,7 +11,7 @@ BIN_XPOS = 4109
 BIN_YPOS = 4107
 BIN_LINK_HIT = 4106
 BIN_ORIENT = 4146
-BIN_LINK_WALLS = 4147 #ypos + 3*16 - 8
+BIN_LINK_WALLS = BIN_YPOS + 32 #ypos + 32 #ypos + 3*16 - 8
 
 BIN_LINK_DEAD = 4128
 
@@ -460,13 +460,13 @@ while True:
 
     newState = GameState(readGameStateFromFile())
     bossHitting = agent.getFeatures(newState, "a")
-    print "Can hit boss: " + str(bossHitting["canHitBoss"])
-    print "Hits boss: " + str(bossHitting["hitsBoss"])
+    #print "Can hit boss: " + str(bossHitting["canHitBoss"])
+    #print "Hits boss: " + str(bossHitting["hitsBoss"])
     diffs = newState.getFeatures()
     
     reward = 0
-    if state.linkHitValue != newState.linkHitValue and \
-        state.linkHitValue != 0 and newState.linkHitValue != 0:
+    if state.linkHitValue == 0 and newState.linkHitValue != 0: #state.linkHitValue != newState.linkHitValue and \
+        #state.linkHitValue != 0 and newState.linkHitValue != 0:
         print "Link got hit! Do better!"
         reward += -1
     if newState.bossHit: #and (not state.bossHit):
