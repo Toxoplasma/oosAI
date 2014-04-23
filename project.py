@@ -275,16 +275,45 @@ class QAgent():
         yDifBucket = int(ydif / BUCKETSIZE)
         feat['yDif<%d' % yDifBucket] = 1.0
 
+        #Can hit boss? DOWN
         if -35 < xdif and xdif < 0 and \
-           -60 < ydif and ydif < -45 and \
+           -70 < ydif and ydif < -45 and \
            nextStateFeatures["down"]:
            feat['canHitBoss'] = 1.0
 
-        #Can hit boss?
+        
         if -35 < xdif and xdif < 0 and \
-           -60 < ydif and ydif < -45 and \
+           -70 < ydif and ydif < -45 and \
            nextStateFeatures["down"] and action == "a":
             feat['hitsBoss'] = 1.0
+
+        #Can hit boss? RIGHT
+        #-25 to -50 x
+        #-50 to -25 y
+        if -50 < xdif and xdif < -20 and \
+           -50 < ydif and ydif < -25 and \
+           nextStateFeatures["right"]:
+           feat['canHitBoss'] = 1.0
+
+        
+        if -50 < xdif and xdif < -20 and \
+           -50 < ydif and ydif < -25 and \
+           nextStateFeatures["right"] and action == "a":
+            feat['hitsBoss'] = 1.0
+
+        #Can hit boss? LEFT
+        #x: 10 - 35
+        if 10 < xdif and xdif < 35 and \
+           -50 < ydif and ydif < -30 and \
+           nextStateFeatures["left"]:
+           feat['canHitBoss'] = 1.0
+
+        
+        if 10 < xdif and xdif < 35 and \
+           -50 < ydif and ydif < -30 and \
+           nextStateFeatures["left"] and action == "a":
+            feat['hitsBoss'] = 1.0
+
 
         #Orientation
         if (nextState.linkOrient == LINKUP): feat['linkUp'] = 1.0
