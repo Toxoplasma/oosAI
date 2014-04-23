@@ -443,6 +443,7 @@ agent = QAgent()
 
 #Main game loop
 turnCount = 0
+episodeCount = 0
 while True:
     turnCount+= 1
 
@@ -509,6 +510,8 @@ while True:
                 print "  " + key + ": " + str(agent.weights[key])
 
     if gameIsOver:
+        episodeCount += 1
+        print "Episodes: " + str(episodeCount)
         win32api.keybd_event(ACTION_TO_VKEY['f1'], ACTION_TO_SKEY['f1'])
         win32api.keybd_event(ACTION_TO_VKEY['f1'], ACTION_TO_SKEY['f1'], 2)
 
