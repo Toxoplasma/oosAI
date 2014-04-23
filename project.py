@@ -253,9 +253,9 @@ class QAgent():
                         ("up", .1),("up", .2),("up", .3),("up", .4),("up", .5),("up", .6),("up", .7),("up", .8),("up", .9),("up", 1.0), \
                         ("a", .3)]
 
-        self.epsilon = 0.25
+        self.epsilon = 0.1
         self.discount = 0.8 #gamma
-        self.alpha = 0.5 #learning rate
+        self.alpha = 0.1 #learning rate
 
     #Modeled after simpleExtractor
     #To do: Try some bucketing maybe?
@@ -519,7 +519,7 @@ while True:
 
     #Update
     agent.update(state, action, newState, reward)
-    print "Action is: " + str(action) + ", Reward is: " + str(reward)
+    #print "Action is: " + str(action) + ", Reward is: " + str(reward)
 
     interestingKeys = ['linkUp', 'linkRight', 'linkLeft', 'linkDown', 'canHitBoss', 'hitsBoss']
     if turnCount % 100 == 0:        
