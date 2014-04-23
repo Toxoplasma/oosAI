@@ -21,8 +21,8 @@ BIN_BOSS_HIT = 4779
 
 STEPSIZE = 0.3
 
-LINKXDIST = 30
-LINKYDIST = 30
+LINKXDIST = 60
+LINKYDIST = 60
 
 LINKLEFT = 87
 LINKRIGHT = 85
@@ -432,10 +432,10 @@ class QAgent():
     def saveWeights(self, filename):
         f = open(filename, 'w')
         for key in self.weights.sortedKeys():
-            f.write("\n")
             f.write(str(key))
             f.write("\n")
             f.write(str(self.weights[key]))
+            f.write("\n")
         f.close()
 
     def loadWeights(self, filename):
@@ -444,8 +444,6 @@ class QAgent():
         while len(line) > 0:
             keyName = line.rstrip()
             keyValue = f.readline().rstrip()
-            print keyValue
-            print len(keyValue)
             keyFloat = float(keyValue)
             self.weights[keyName] = keyFloat
             line = f.readline()
