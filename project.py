@@ -266,6 +266,9 @@ class QAgent():
         # feat[nextState] = 1.0
         #feat['action=%s' % action] = 1.0
 
+        xdif = nextStateFeatures["xDif"]
+        ydif = nextStateFeatures["yDif"]
+
         #position stuff:
         #feat['linkxPos=%s' % state.linkPos[0]]
         #feat['linkyPos=%s' % state.linkPos[1]]
@@ -273,45 +276,21 @@ class QAgent():
         #feat['bossyPos=%s' % state.bossPos[1]]
 
         #Xdif buckets
-        xDifBucket = int(nextStateFeatures["xDif"] / BUCKETSIZE)
+        xDifBucket = int(xdif / BUCKETSIZE)
         feat['xDif<%d' % xDifBucket] = 1.0
-        yDifBucket = int(nextStateFeatures["yDif"] / BUCKETSIZE)
+        yDifBucket = int(ydif / BUCKETSIZE)
         feat['yDif<%d' % yDifBucket] = 1.0
 
-        # if nextStateFeatures["xDif"] < -90:
-        #     feat['xDif<-90'] = 1.0
-        # elif nextStateFeatures["xDif"] < -60:
-        #     feat['xDif<-60'] = 1.0
-        # elif nextStateFeatures["xDif"] < -30:
-        #     feat['xDif<-30'] = 1.0
-        # elif nextStateFeatures["xDif"] < 0:
-        #     feat['xDif<0'] = 1.0
-        # elif nextStateFeatures["xDif"] < 30:
-        #     feat['xDif<30'] = 1.0
-        # elif nextStateFeatures["xDif"] < 60:
-        #     feat['xDif<60'] = 1.0
-        # elif nextStateFeatures["xDif"] < 90:
-        #     feat['xDif<90'] = 1.0
-        # else:
-        #     feat['xDif>90'] = 1.0
+        if -10 < xdif and xdif < 10 and \
+           0 < ydif and ydif < 20 and \
+           nextStateFeatures["down"]:
+           feat['canHitBoss'] = 1.0
 
-        #ydif buckets
-        # if nextStateFeatures["yDif"] < -90:
-        #     feat['yDif<-90'] = 1.0
-        # elif nextStateFeatures["yDif"] < -60:
-        #     feat['yDif<-60'] = 1.0
-        # elif nextStateFeatures["yDif"] < -30:
-        #     feat['yDif<-30'] = 1.0
-        # elif nextStateFeatures["yDif"] < 0:
-        #     feat['yDif<0'] = 1.0
-        # elif nextStateFeatures["yDif"] < 30:
-        #     feat['yDif<30'] = 1.0
-        # elif nextStateFeatures["yDif"] < 60:
-        #     feat['yDif<60'] = 1.0
-        # elif nextStateFeatures["yDif"] < 90:
-        #     feat['yDif<90'] = 1.0
-        # else:
-        #     feat['yDif>90'] = 1.0
+        #Can hit boss?
+        if -10 < xdif and xdif < 10 and \
+           0 < ydif and ydif < 20 and \
+           nextStateFeatures["down"] and action == "a":
+            feat['hitsBoss'] = 1.0
 
         #Orientation
         if (nextState.linkOrient == LINKUP): feat['linkUp'] = 1.0
@@ -446,9 +425,9 @@ while True:
         print "Action is: " + action
 
     #Do the action for one STEP
-    win32api.keybd_event(ACTION_TO_VKEY[action], ACTION_TO_SKEY[action])
-    time.sleep(STEPSIZE)
-    win32api.keybd_event(ACTION_TO_VKEY[action], ACTION_TO_SKEY[action], 2)
+    # win32api.keybd_event(ACTION_TO_VKEY[action], ACTION_TO_SKEY[action])
+    # time.sleep(STEPSIZE)
+    # win32api.keybd_event(ACTION_TO_VKEY[action], ACTION_TO_SKEY[action], 2)
 
     #Get the reward and update the weights
     gameIsOver = False
@@ -476,12 +455,14 @@ while True:
     agent.update(state, action, newState, reward)
     print "Action is: " + str(action) + ", Reward is: " + str(reward)
 
+    interestingKeys = ['canHitBoss', 'hitsBoss']
+    #['linkUp', 'linkRight', 'linkLeft', 'linkDown', 
+     #           'action=a', 'action=left', 'action=right', 'action=down', 'action=up']
     if turnCount % 100 == 0:
         
         print "New weights are: "
         for key in sorted(agent.weights.keys()):
-            if key in ['linkUp', 'linkRight', 'linkLeft', 'linkDown', 
-                'action=a', 'action=left', 'action=right', 'action=down', 'action=up']:
+            if key in interestingKeys:
                 print "  " + key + ": " + str(agent.weights[key])
 
     if gameIsOver:
