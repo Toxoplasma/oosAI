@@ -458,11 +458,11 @@ while True:
     dumpState()
     time.sleep(.01)
 
-    newState = GameState(readGameStateFromFile())
-    bossHitting = agent.getFeatures(newState, "a")
+    #newState = GameState(readGameStateFromFile())
+    #bossHitting = agent.getFeatures(newState, "a")
     #print "Can hit boss: " + str(bossHitting["canHitBoss"])
     #print "Hits boss: " + str(bossHitting["hitsBoss"])
-    diffs = newState.getFeatures()
+    #diffs = newState.getFeatures()
     
     reward = 0
     if state.linkHitValue == 0 and newState.linkHitValue != 0: #state.linkHitValue != newState.linkHitValue and \
@@ -483,10 +483,8 @@ while True:
     agent.update(state, action, newState, reward)
     #print "Action is: " + str(action) + ", Reward is: " + str(reward)
 
-    interestingKeys = ['linkUp', 'linkRight', 'linkLeft', 'linkDown', 
-                'action=a', 'action=left', 'action=right', 'action=down', 'action=up']
-    if turnCount % 100 == 0:
-        
+    interestingKeys = ['linkUp', 'linkRight', 'linkLeft', 'linkDown', 'canHitBoss', 'hitsBoss']
+    if turnCount % 100 == 0:        
         print "New weights are: "
         for key in sorted(agent.weights.keys()):
             if key in interestingKeys:
