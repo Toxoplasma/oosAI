@@ -79,6 +79,7 @@ class Counter(dict):
         ['second', 'third', 'first']
         """
         sortedItems = self.items()
+        return sortedItems
         compare = lambda x, y:  sign(y[1] - x[1])
         sortedItems.sort(cmp=compare)
         return [x[0] for x in sortedItems]
