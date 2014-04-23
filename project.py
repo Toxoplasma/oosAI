@@ -324,7 +324,7 @@ class QAgent():
 
         #Do we run into aqua?
         if -45 < xdif and xdif < 25 and \
-           -50 < ydif and ydif < 20 and:
+           -50 < ydif and ydif < 20:
            feat['insideBoss'] = 1.0
 
 
