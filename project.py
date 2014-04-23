@@ -413,7 +413,7 @@ class QAgent():
         """
         "*** YOUR CODE HERE ***"
         features = self.getFeatures(state, action) #self.featExtractor.getFeatures(state, action)
-        featureNames = featureNames = sorted(features.keys())
+        featureNames = sorted(features.keys())
 
         newWeights = self.weights.copy()
 
@@ -429,6 +429,24 @@ class QAgent():
 
         self.weights = newWeights
 
+    def saveWeights(self, filename):
+        f = open(filename, 'w')
+        for key in self.weights.sortedKeys():
+            f.write("\n")
+            f.write(key)
+            f.write("\n")
+            f.write(self.weights[key])
+        f.close()
+
+    def loadWeights(self, filename):
+        f = open(filename, 'r')
+        line = f.readline()
+        while line != "":
+            keyName = f.readline()
+            keyValue = f.readline()
+            keyFloat = float(keyValue)
+            self.weights[keyName] = keyFloat
+
 
 
 #Stuff we do at start
@@ -439,6 +457,7 @@ wsh.AppActivate("VisualBoyAdvance")
 #Make our learner
 state = GameState(readGameStateFromFile())
 agent = QAgent()
+agent.loadWeights("weights.txt")
 
 
 #Main game loop
@@ -508,6 +527,9 @@ while True:
             if key in interestingKeys:
                 lol = 0
                 print "  " + key + ": " + str(agent.weights[key])
+
+
+    agent.saveWeights("weights.txt")
 
     if gameIsOver:
         episodeCount += 1
