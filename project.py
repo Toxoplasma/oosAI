@@ -419,9 +419,9 @@ while True:
         print "Action is: " + action
 
     #Do the action for one STEP
-    # win32api.keybd_event(ACTION_TO_VKEY[action], ACTION_TO_SKEY[action])
-    # time.sleep(STEPSIZE)
-    # win32api.keybd_event(ACTION_TO_VKEY[action], ACTION_TO_SKEY[action], 2)
+    win32api.keybd_event(ACTION_TO_VKEY[action], ACTION_TO_SKEY[action])
+    time.sleep(STEPSIZE)
+    win32api.keybd_event(ACTION_TO_VKEY[action], ACTION_TO_SKEY[action], 2)
 
     #Get the reward and update the weights
     gameIsOver = False
@@ -454,16 +454,15 @@ while True:
     agent.update(state, action, newState, reward)
     #print "Action is: " + str(action) + ", Reward is: " + str(reward)
 
-    interestingKeys = ['canHitBoss', 'hitsBoss']
-    #['linkUp', 'linkRight', 'linkLeft', 'linkDown', 
-     #           'action=a', 'action=left', 'action=right', 'action=down', 'action=up']
-    if turnCount % 1 == 0:
+    interestingKeys = ['linkUp', 'linkRight', 'linkLeft', 'linkDown', 
+                'action=a', 'action=left', 'action=right', 'action=down', 'action=up']
+    if turnCount % 100 == 0:
         
-        #print "New weights are: "
+        print "New weights are: "
         for key in sorted(agent.weights.keys()):
             if key in interestingKeys:
                 lol = 0
-                #print "  " + key + ": " + str(agent.weights[key])
+                print "  " + key + ": " + str(agent.weights[key])
 
     if gameIsOver:
         win32api.keybd_event(ACTION_TO_VKEY['f1'], ACTION_TO_SKEY['f1'])
