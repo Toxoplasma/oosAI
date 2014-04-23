@@ -21,8 +21,8 @@ BIN_BOSS_HIT = 4779
 
 STEPSIZE = 0.3
 
-LINKXDIST = 30 * STEPSIZE
-LINKYDIST = 30 * STEPSIZE
+LINKXDIST = 30
+LINKYDIST = 30
 
 LINKLEFT = 87
 LINKRIGHT = 85
@@ -153,29 +153,31 @@ class GameState():
         else:
             self.bossHit = False
 
-    def getNextState(self, action):
+    def getNextState(self, actionPair):
+        action, actionTime = actionPair
+
         nextState = GameState((0, 0, 0, 2, 2, 0, 0, 0, 0))
         nextState.copy(state) #This should make it copy
 
         if(action == 'left'):
             if not state.leftWall:
                 oldx, oldy = state.linkPos
-                nextState.linkPos = (oldx - LINKXDIST, oldy)
+                nextState.linkPos = (oldx - LINKXDIST * actionTime, oldy)
             nextState.linkOrient = LINKLEFT
         elif(action == 'right'):
             if not state.rightWall:
                 oldx, oldy = state.linkPos
-                nextState.linkPos = (oldx + LINKXDIST, oldy)
+                nextState.linkPos = (oldx + LINKXDIST * actionTime, oldy)
             nextState.linkOrient = LINKRIGHT
         elif(action == 'down'):
             if not state.bottomWall:
                 oldx, oldy = state.linkPos
-                nextState.linkPos = (oldx, oldy + LINKYDIST)
+                nextState.linkPos = (oldx, oldy + LINKYDIST * actionTime)
             nextState.linkOrient = LINKDOWN
         elif(action == 'up'):
             if not state.topWall:
                 oldx, oldy = state.linkPos
-                nextState.linkPos = (oldx, oldy - LINKYDIST)
+                nextState.linkPos = (oldx, oldy - LINKYDIST * actionTime)
             nextState.linkOrient = LINKUP
 
         return nextState
@@ -244,7 +246,12 @@ class QAgent():
     def __init__(self):
         self.weights = util.Counter()#xDif = 0, yDif = 0,
                             #up = 0, left = 0, down = 0, right = 0)
-        self.actions = ["right", "down", "up", "left", "a"]
+        #self.actions = ["right", "down", "up", "left", "a"]
+        self.actions = [("right", .1),("right", .2),("right", .3),("right", .4),("right", .5),("right", .6),("right", .7),("right", .8),("right", .9),("right", 1.0), \
+                        ("left", .1),("left", .2),("left", .3),("left", .4),("left", .5),("left", .6),("left", .7),("left", .8),("left", .9),("left", 1.0), \
+                        ("down", .1),("down", .2),("down", .3),("down", .4),("down", .5),("down", .6),("down", .7),("down", .8),("down", .9),("down", 1.0), \
+                        ("up", .1),("up", .2),("up", .3),("up", .4),("up", .5),("up", .6),("up", .7),("up", .8),("up", .9),("up", 1.0), \
+                        ("a", .3)]
 
         self.epsilon = 0.25
         self.discount = 0.8 #gamma
@@ -284,7 +291,7 @@ class QAgent():
         
         if -35 < xdif and xdif < 0 and \
            -70 < ydif and ydif < -45 and \
-           nextStateFeatures["down"] and action == "a":
+           nextStateFeatures["down"] and action[0] == "a":
             feat['hitsBoss'] = 1.0
 
         #Can hit boss? RIGHT
@@ -298,7 +305,7 @@ class QAgent():
         
         if -50 < xdif and xdif < -20 and \
            -50 < ydif and ydif < -25 and \
-           nextStateFeatures["right"] and action == "a":
+           nextStateFeatures["right"] and action[0] == "a":
             feat['hitsBoss'] = 1.0
 
         #Can hit boss? LEFT
@@ -311,7 +318,7 @@ class QAgent():
         
         if 10 < xdif and xdif < 35 and \
            -50 < ydif and ydif < -30 and \
-           nextStateFeatures["left"] and action == "a":
+           nextStateFeatures["left"] and action[0] == "a":
             feat['hitsBoss'] = 1.0
 
 
@@ -447,16 +454,17 @@ while True:
     action = agent.getAction(state)
 
     if turnCount % SLASHPERCENT == 0:
-        action = 'a'
+        action = ('a', .3)
     
     if turnCount % 100 == 0:
         print "State is: " + str(state)
         print "Action is: " + action
 
     #Do the action for one STEP
-    win32api.keybd_event(ACTION_TO_VKEY[action], ACTION_TO_SKEY[action])
-    time.sleep(STEPSIZE)
-    win32api.keybd_event(ACTION_TO_VKEY[action], ACTION_TO_SKEY[action], 2)
+
+    win32api.keybd_event(ACTION_TO_VKEY[action[0]], ACTION_TO_SKEY[action[0]])
+    time.sleep([action1])
+    win32api.keybd_event(ACTION_TO_VKEY[action[0]], ACTION_TO_SKEY[action[0]], 2)
 
     #Get the reward and update the weights
     gameIsOver = False
