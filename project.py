@@ -275,14 +275,14 @@ class QAgent():
         yDifBucket = int(ydif / BUCKETSIZE)
         feat['yDif<%d' % yDifBucket] = 1.0
 
-        if -10 < xdif and xdif < 10 and \
-           0 < ydif and ydif < 20 and \
+        if -35 < xdif and xdif < 0 and \
+           -60 < ydif and ydif < -45 and \
            nextStateFeatures["down"]:
            feat['canHitBoss'] = 1.0
 
         #Can hit boss?
-        if -10 < xdif and xdif < 10 and \
-           0 < ydif and ydif < 20 and \
+        if -35 < xdif and xdif < 0 and \
+           -60 < ydif and ydif < -45 and \
            nextStateFeatures["down"] and action == "a":
             feat['hitsBoss'] = 1.0
 
