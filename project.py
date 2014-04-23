@@ -430,13 +430,18 @@ while True:
     time.sleep(.01)
 
     newState = GameState(readGameStateFromFile())
-
+    bossHitting = agent.getFeatures(newState, "a")
+    print "Can hit boss: " + str(bossHitting["canHitBoss"])
+    print "Hits boss: " + str(bossHitting["hitsBoss"])
+    diffs = newState.getFeatures()
+    
     reward = 0
     if state.linkHitValue != newState.linkHitValue and \
         state.linkHitValue != 0 and newState.linkHitValue != 0:
         print "Link got hit! Do better!"
         reward += -1
     if newState.bossHit: #and (not state.bossHit):
+        print "XDiff: " + str(diffs["xDif"]) + " YDiff: " + str(diffs["yDif"])
         reward += 10
     if newState.linkDead:
         reward += -2
@@ -447,17 +452,18 @@ while True:
 
     #Update
     agent.update(state, action, newState, reward)
-    print "Action is: " + str(action) + ", Reward is: " + str(reward)
+    #print "Action is: " + str(action) + ", Reward is: " + str(reward)
 
     interestingKeys = ['canHitBoss', 'hitsBoss']
     #['linkUp', 'linkRight', 'linkLeft', 'linkDown', 
      #           'action=a', 'action=left', 'action=right', 'action=down', 'action=up']
-    if turnCount % 100 == 0:
+    if turnCount % 1 == 0:
         
-        print "New weights are: "
+        #print "New weights are: "
         for key in sorted(agent.weights.keys()):
             if key in interestingKeys:
-                print "  " + key + ": " + str(agent.weights[key])
+                lol = 0
+                #print "  " + key + ": " + str(agent.weights[key])
 
     if gameIsOver:
         win32api.keybd_event(ACTION_TO_VKEY['f1'], ACTION_TO_SKEY['f1'])
