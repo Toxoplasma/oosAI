@@ -478,12 +478,12 @@ while True:
     
     if turnCount % 100 == 0:
         print "State is: " + str(state)
-        print "Action is: " + action
+        print "Action is: " + str(action)
 
     #Do the action for one STEP
 
     win32api.keybd_event(ACTION_TO_VKEY[action[0]], ACTION_TO_SKEY[action[0]])
-    time.sleep([action1])
+    time.sleep(action[1])
     win32api.keybd_event(ACTION_TO_VKEY[action[0]], ACTION_TO_SKEY[action[0]], 2)
 
     #Get the reward and update the weights
@@ -518,7 +518,7 @@ while True:
 
     #Update
     agent.update(state, action, newState, reward)
-    #print "Action is: " + str(action) + ", Reward is: " + str(reward)
+    print "Action is: " + str(action) + ", Reward is: " + str(reward)
 
     interestingKeys = ['linkUp', 'linkRight', 'linkLeft', 'linkDown', 'canHitBoss', 'hitsBoss']
     if turnCount % 100 == 0:        
