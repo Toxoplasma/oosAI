@@ -461,10 +461,10 @@ while True:
         print "Action is: " + action
 
     #Do the action for one STEP
+
     win32api.keybd_event(ACTION_TO_VKEY[action[0]], ACTION_TO_SKEY[action[0]])
     time.sleep([action1])
     win32api.keybd_event(ACTION_TO_VKEY[action[0]], ACTION_TO_SKEY[action[0]], 2)
-
 
     #Get the reward and update the weights
     gameIsOver = False
