@@ -433,19 +433,22 @@ class QAgent():
         f = open(filename, 'w')
         for key in self.weights.sortedKeys():
             f.write("\n")
-            f.write(key)
+            f.write(str(key))
             f.write("\n")
-            f.write(self.weights[key])
+            f.write(str(self.weights[key]))
         f.close()
 
     def loadWeights(self, filename):
         f = open(filename, 'r')
         line = f.readline()
-        while line != "":
-            keyName = f.readline()
-            keyValue = f.readline()
+        while len(line) > 0:
+            keyName = line.rstrip()
+            keyValue = f.readline().rstrip()
+            print keyValue
+            print len(keyValue)
             keyFloat = float(keyValue)
             self.weights[keyName] = keyFloat
+            line = f.readline()
 
 
 
